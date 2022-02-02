@@ -1,0 +1,49 @@
+//Relpace with your product form..........
+
+
+
+            {%- form 'product', product, class: 'product_fm', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+            <div class="pdp-button-group product_has_variant">
+              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              {%- unless product.has_only_default_variant -%}
+              <div class="varaint-selector variant-radios no-js-hidden" data-section="{{ section.id }}" data-url="{{ product.url | within: collection }}" data-picker-type="{{ section.settings.picker_type }}">
+                {%- for option in product.options_with_values -%}
+                <ul class="js product-form__input pdp-switch">
+                  {%- for value in option.values -%}
+                  <li class="{% if option.selected_value == value %}active{% endif %} {{ option.name | handle }}-{{ value | handle }}">
+                    <input type="radio" id="{{ section.id }}-{{ option.name }}-{{ forloop.index0 }}"
+                           name="{{ option.name }}"
+                           value="{{ value | escape }}"
+                           data-option="{{ option.name | handle }}-{{ value | handle }}"
+                           form="product-form-{{ section.id }}"
+                           {% if option.selected_value == value %}checked{% endif %}
+                           >
+                    <label for="{{ section.id }}-{{ option.name }}-{{ forloop.index0 }}">
+                      {{ value }}
+                    </label>
+                  </li>
+                  {%- endfor -%}
+                </ul>
+                {%- endfor -%}
+
+                <script type="application/json">
+                    {{ product.variants | json }}
+                </script>
+              </div>
+              {%- endunless -%}
+            </div>
+            <button type="submit"
+                    name="add"
+                    class="btn mobile-dark add-to-cart-btn"
+                    data-add-text="{{ 'products.product.add_to_cart' | t }}"
+                    data-sold-text="{{ 'products.product.sold_out' | t }}">
+              {%- if product.selected_or_first_available_variant.available -%}
+              {{ 'products.product.add_to_cart' | t }}
+              {%- else -%}
+              {{ 'products.product.sold_out' | t }}
+              {%- endif -%}
+            </button>
+            {%- endform -%}
+            
+            
+            
